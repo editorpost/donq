@@ -9,28 +9,27 @@ import (
 //	{
 //  "db": "spider",
 //  "tls": false,
+//  "credential": {
+//    "password": "nopass",
+//    "username": "root"
+//  },
 //  "servers": [
 //    {
 //      "host": "mongo",
-//      "port": 27017,
-//      "credential": {
-//        "password": "nopass",
-//        "username": "root"
-//      }
+//      "port": 27017
 //    }
 //  ]
+//}
 //}
 
 type (
 	Config struct {
-		Db         string `json:"db"`
-		Host       string `json:"host"`
-		Port       int    `json:"port"`
-		DSN        string `json:"dsn"`
-		Credential struct {
-			Password string `json:"password"`
-			Username string `json:"username"`
-		} `json:"credential"`
+		Db   string `json:"db"`
+		Host string `json:"host"`
+		Port int    `json:"port"`
+		DSN  string `json:"dsn"`
+		User string `json:"password"`
+		Pass string `json:"username"`
 	}
 )
 
@@ -68,22 +67,17 @@ func ConfigFromResource(res any) (*Config, error) {
 		break
 	}
 
-	credentials, ok := server["credential"].(map[string]any)
+	credentials, ok := secret["credential"].(map[string]any)
 	if !ok {
-		return nil, fmt.Errorf("invalid spider mongo credential type: %T", server["credential"])
+		return nil, fmt.Errorf("invalid spider mongo credential type: %T", secret["credential"])
 	}
 
 	return &Config{
 		Db:   secret["db"].(string),
 		Host: server["host"].(string),
 		Port: int(server["port"].(float64)),
-		Credential: struct {
-			Password string `json:"password"`
-			Username string `json:"username"`
-		}{
-			Password: credentials["password"].(string),
-			Username: credentials["username"].(string),
-		},
+		User: credentials["username"].(string),
+		Pass: credentials["password"].(string),
 		DSN: fmt.Sprintf("mongodb://%s:%s@%s:%d",
 			credentials["username"],
 			credentials["password"],

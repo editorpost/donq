@@ -14,12 +14,12 @@ func TestConfigFromResource(t *testing.T) {
 		"servers": []interface{}{
 			map[string]interface{}{
 				"host": "exampleHost",
-				"port": 1234,
-				"credential": map[string]interface{}{
-					"password": "examplePassword",
-					"username": "exampleUsername",
-				},
+				"port": 1234.0,
 			},
+		},
+		"credential": map[string]interface{}{
+			"password": "examplePassword",
+			"username": "exampleUsername",
 		},
 	}
 
@@ -31,8 +31,8 @@ func TestConfigFromResource(t *testing.T) {
 	assert.Equal(t, "exampleDb", config.Db, "Expected db value to match")
 	assert.Equal(t, "exampleHost", config.Host, "Expected host value to match")
 	assert.Equal(t, 1234, config.Port, "Expected port value to match")
-	assert.Equal(t, "examplePassword", config.Credential.Password, "Expected password value to match")
-	assert.Equal(t, "exampleUsername", config.Credential.Username, "Expected username value to match")
+	assert.Equal(t, "examplePassword", config.Pass, "Expected password value to match")
+	assert.Equal(t, "exampleUsername", config.User, "Expected username value to match")
 	assert.Equal(t, "mongodb://exampleUsername:examplePassword@exampleHost:1234", config.DSN, "Expected DSN value to match")
 }
 
