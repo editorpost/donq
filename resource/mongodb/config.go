@@ -26,16 +26,16 @@ type Config struct {
 	DSN string `json:"dsn"`
 }
 
-func MustResource() *Config {
-	res, err := GetResource()
+func MustResource(name string) *Config {
+	res, err := GetResource(name)
 	if err != nil {
 		panic(err)
 	}
 	return res
 }
 
-func GetResource() (*Config, error) {
-	res, _ := wmill.GetResource("u/spider/mongo")
+func GetResource(name string) (*Config, error) {
+	res, _ := wmill.GetResource(name)
 	secret, ok := res.(map[string]any)
 	if !ok {
 		return nil, fmt.Errorf("invalid spider mongo resource type: %T", res)

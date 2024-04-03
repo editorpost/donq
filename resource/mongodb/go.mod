@@ -1,6 +1,6 @@
 module github.com/editorpost/donq/resource/mongodb
 
-go 1.22
+go 1.21
 
 require (
 	github.com/windmill-labs/windmill-go-client v1.301.0
