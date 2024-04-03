@@ -30,6 +30,7 @@ type (
 		DSN  string `json:"dsn"`
 		User string `json:"password"`
 		Pass string `json:"username"`
+		TLS  bool   `json:"tls"`
 	}
 )
 
@@ -67,7 +68,7 @@ func ConfigFromResource(res any) (*Config, error) {
 		break
 	}
 
-	credentials, ok := secret["credential"].(map[string]any)
+	cred, ok := secret["credential"].(map[string]any)
 	if !ok {
 		return nil, fmt.Errorf("invalid spider mongo credential type: %T", secret["credential"])
 	}
@@ -76,11 +77,11 @@ func ConfigFromResource(res any) (*Config, error) {
 		Db:   secret["db"].(string),
 		Host: server["host"].(string),
 		Port: int(server["port"].(float64)),
-		User: credentials["username"].(string),
-		Pass: credentials["password"].(string),
+		User: cred["username"].(string),
+		Pass: cred["password"].(string),
 		DSN: fmt.Sprintf("mongodb://%s:%s@%s:%d",
-			credentials["username"],
-			credentials["password"],
+			cred["username"],
+			cred["password"],
 			server["host"],
 			int(server["port"].(float64)),
 		),
