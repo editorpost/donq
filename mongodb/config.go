@@ -70,13 +70,13 @@ func ConfigFromResource(res any) (*Config, error) {
 
 	credentials, ok := server["credential"].(map[string]any)
 	if !ok {
-		return nil, fmt.Errorf("invalid spider mongo credential type: %T", secret["credential"])
+		return nil, fmt.Errorf("invalid spider mongo credential type: %T", server["credential"])
 	}
 
 	return &Config{
 		Db:   secret["db"].(string),
 		Host: server["host"].(string),
-		Port: server["port"].(int),
+		Port: int(server["port"].(float64)),
 		Credential: struct {
 			Password string `json:"password"`
 			Username string `json:"username"`
@@ -88,7 +88,7 @@ func ConfigFromResource(res any) (*Config, error) {
 			credentials["username"],
 			credentials["password"],
 			server["host"],
-			server["port"],
+			int(server["port"].(float64)),
 		),
 	}, nil
 }
