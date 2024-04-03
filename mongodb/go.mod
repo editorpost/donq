@@ -1,4 +1,4 @@
-module github.com/editorpost/donq/resource/mongodb
+module github.com/editorpost/donq/mongodb
 
 go 1.21
 
