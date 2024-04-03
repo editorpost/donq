@@ -7,24 +7,32 @@ import (
 
 // Windmill Mongo Config example:
 //	{
-//		"host": "mongo",
-//		"port": 27017,
-//		"credential": {
-//		"password": "nopass",
-//			"username": "root"
-//		}
-//	}
+//  "db": "spider",
+//  "tls": false,
+//  "servers": [
+//    {
+//      "host": "mongo",
+//      "port": 27017,
+//      "credential": {
+//        "password": "nopass",
+//        "username": "root"
+//      }
+//    }
+//  ]
+//}
 
-type Config struct {
-	Db         string `json:"db"`
-	Host       string `json:"host"`
-	Port       int    `json:"port"`
-	Credential struct {
-		Password string `json:"password"`
-		Username string `json:"username"`
-	} `json:"credential"`
-	DSN string `json:"dsn"`
-}
+type (
+	Config struct {
+		Db         string `json:"db"`
+		Host       string `json:"host"`
+		Port       int    `json:"port"`
+		DSN        string `json:"dsn"`
+		Credential struct {
+			Password string `json:"password"`
+			Username string `json:"username"`
+		} `json:"credential"`
+	}
+)
 
 func MustResource(name string) *Config {
 	res, err := GetResource(name)
@@ -36,32 +44,51 @@ func MustResource(name string) *Config {
 
 func GetResource(name string) (*Config, error) {
 	res, _ := wmill.GetResource(name)
+	return ConfigFromResource(res)
+}
+
+func ConfigFromResource(res any) (*Config, error) {
+
 	secret, ok := res.(map[string]any)
 	if !ok {
 		return nil, fmt.Errorf("invalid spider mongo resource type: %T", res)
 	}
 
-	auth, ok := secret["credential"].(map[string]string)
+	servers, ok := secret["servers"].([]any)
+	if !ok {
+		return nil, fmt.Errorf("invalid spider mongo servers type: %T", secret["servers"])
+	}
+
+	server := map[string]any{}
+	for _, srv := range servers {
+		server, ok = srv.(map[string]any)
+		if !ok {
+			return nil, fmt.Errorf("invalid spider mongo server type: %T", server)
+		}
+		break
+	}
+
+	credentials, ok := server["credential"].(map[string]any)
 	if !ok {
 		return nil, fmt.Errorf("invalid spider mongo credential type: %T", secret["credential"])
 	}
 
 	return &Config{
 		Db:   secret["db"].(string),
-		Host: secret["host"].(string),
-		Port: secret["port"].(int),
+		Host: server["host"].(string),
+		Port: server["port"].(int),
 		Credential: struct {
 			Password string `json:"password"`
 			Username string `json:"username"`
 		}{
-			Password: auth["password"],
-			Username: auth["username"],
+			Password: credentials["password"].(string),
+			Username: credentials["username"].(string),
 		},
 		DSN: fmt.Sprintf("mongodb://%s:%s@%s:%d",
-			auth["username"],
-			auth["password"],
-			secret["host"],
-			secret["port"],
+			credentials["username"],
+			credentials["password"],
+			server["host"],
+			server["port"],
 		),
 	}, nil
 }
