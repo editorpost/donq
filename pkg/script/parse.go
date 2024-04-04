@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/editorpost/donq/pkg/valid"
 )
 
 func ParseArgs[T any](from any, to *T) error {
@@ -24,5 +25,6 @@ func ParseArgs[T any](from any, to *T) error {
 		return fmt.Errorf("failed to unmarshal input arguments: %w", err)
 	}
 
-	return nil
+	// validate struct
+	return valid.Validate.Struct(to)
 }
