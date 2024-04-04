@@ -108,8 +108,8 @@ func ParseInt(i any) int {
 	case float64:
 		return int(v)
 	case json.Number:
-		i, _ := v.Int64()
-		return int(i)
+		n, _ := v.Int64()
+		return int(n)
 	default:
 		return 0
 	}
