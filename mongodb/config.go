@@ -1,6 +1,7 @@
 package mongodb
 
 import (
+	"encoding/json"
 	"fmt"
 	wmill "github.com/windmill-labs/windmill-go-client"
 )
@@ -73,6 +74,11 @@ func ConfigFromResource(res any) (*Config, error) {
 		return nil, fmt.Errorf("invalid spider mongo credential type: %T", secret["credential"])
 	}
 
+	port, err := server["port"].(json.Number).Int64()
+	if err != nil {
+		return nil, fmt.Errorf("invalid spider mongo port type: %T", server["port"])
+	}
+
 	return &Config{
 		Db:   secret["db"].(string),
 		Host: server["host"].(string),
@@ -83,7 +89,7 @@ func ConfigFromResource(res any) (*Config, error) {
 			cred["username"],
 			cred["password"],
 			server["host"],
-			int(server["port"].(float64)),
+			port,
 		),
 	}, nil
 }
