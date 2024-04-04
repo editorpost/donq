@@ -78,15 +78,15 @@ func ConfigFromResource(res any) (*Config, error) {
 		return nil, fmt.Errorf("invalid spider mongo credential type: %T", secret["credential"])
 	}
 
-	port, err := server["port"].(json.Number).Int64()
-	if err != nil {
+	port := ParseInt(server["port"])
+	if port == 0 {
 		return nil, fmt.Errorf("invalid spider mongo port type: %T", server["port"])
 	}
 
 	return &Config{
 		Db:   secret["db"].(string),
 		Host: server["host"].(string),
-		Port: int(port),
+		Port: port,
 		User: cred["username"].(string),
 		Pass: cred["password"].(string),
 		DSN: fmt.Sprintf("mongodb://%s:%s@%s:%d",
@@ -96,4 +96,21 @@ func ConfigFromResource(res any) (*Config, error) {
 			port,
 		),
 	}, nil
+}
+
+// ParseInt from any type
+func ParseInt(i any) int {
+	switch v := i.(type) {
+	case int:
+		return v
+	case int64:
+		return int(v)
+	case float64:
+		return int(v)
+	case json.Number:
+		i, _ := v.Int64()
+		return int(i)
+	default:
+		return 0
+	}
 }
