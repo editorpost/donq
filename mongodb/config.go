@@ -24,6 +24,7 @@ import (
 //}
 
 type (
+	// Config for MongoDB connection
 	Config struct {
 		Db   string `json:"db"`
 		Host string `json:"host"`
@@ -35,6 +36,7 @@ type (
 	}
 )
 
+// MustResource for MongoDB from Windmill Resources or panic on error
 func MustResource(name string) *Config {
 	res, err := GetResource(name)
 	if err != nil {
@@ -43,11 +45,13 @@ func MustResource(name string) *Config {
 	return res
 }
 
+// GetResource for MongoDB from Windmill Resources
 func GetResource(name string) (*Config, error) {
 	res, _ := wmill.GetResource(name)
 	return ConfigFromResource(res)
 }
 
+// ConfigFromResource parse Windmill resource to MongoDB Config
 func ConfigFromResource(res any) (*Config, error) {
 
 	secret, ok := res.(map[string]any)
