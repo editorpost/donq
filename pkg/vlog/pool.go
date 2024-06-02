@@ -3,8 +3,11 @@ package vlog
 import (
 	"fmt"
 	"log/slog"
+	"os"
+	"os/signal"
 	"slices"
 	"sync"
+	"syscall"
 	"time"
 )
 
@@ -31,12 +34,23 @@ func NewPool(sender SenderFn) *Pool {
 		sender = StdoutSender(Mapper)
 	}
 
-	return &Pool{
+	pool := &Pool{
 		BufSize: bufSize,
 		Timeout: 10 * time.Second,
 		Sender:  sender,
 		pool:    make([]slog.Record, 0, bufSize),
 	}
+
+	// flush the pool on exit
+	go func(fn func()) {
+		// wait for exit signal
+		exit := make(chan os.Signal, 1)
+		signal.Notify(exit, os.Interrupt, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
+		<-exit
+		fn()
+	}(pool.Flush)
+
+	return pool
 }
 
 // Ticker runs Flush every interval
@@ -155,6 +169,12 @@ func (p *Pool) DumpPool() []slog.Record {
 	defer p.mute.RUnlock()
 
 	return slices.Clone(p.pool)
+}
+func (p *Pool) CountPool() int {
+	p.mute.RLock()
+	defer p.mute.RUnlock()
+
+	return len(p.pool)
 }
 
 // StdoutSender sender for logs that failed to be sent to the primary endpoint

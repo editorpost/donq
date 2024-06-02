@@ -2,6 +2,7 @@ package vlog_test
 
 import (
 	"sync"
+	"syscall"
 	"testing"
 	"time"
 
@@ -165,4 +166,28 @@ func TestPool_WithTicker(t *testing.T) {
 
 	assert.Empty(t, pool.DumpPool())
 	fakeSender.AssertExpectations(t)
+}
+
+func TestPool_Graceful(t *testing.T) {
+
+	sender := new(FakeSender)
+	pool := vlog.NewPool(sender.Send)
+	go pool.Ticker(60 * time.Second)
+
+	record := slog.Record{
+		Message: gofakeit.Word(),
+		Time:    time.Now(),
+		Level:   slog.LevelInfo,
+	}
+	pool.Add(record)
+	time.Sleep(10 * time.Millisecond)
+	assert.Equal(t, 1, pool.CountPool())
+
+	sender.On("Send", mock.Anything).Return(nil).Once()
+
+	syscall.Kill(syscall.Getpid(), syscall.SIGINT)
+	time.Sleep(10 * time.Millisecond)
+
+	assert.Equal(t, 0, pool.CountPool())
+	sender.AssertExpectations(t)
 }
