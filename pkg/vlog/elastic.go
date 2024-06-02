@@ -48,7 +48,16 @@ func (e ElasticIngester) Sender() SenderFn {
 		// try to send the logs
 		err := retry.Do(
 			func() error {
-				_, err := e.client.Bulk(bytes.NewReader(buf.Bytes()))
+				res, err := e.client.Bulk(bytes.NewReader(buf.Bytes()))
+				if err != nil {
+					return err
+				}
+
+				res.Body.Close()
+				if res.IsError() {
+					return fmt.Errorf("Failed to index data: %s", res.Status())
+				}
+
 				return err
 			},
 			retry.Attempts(10), retry.Delay(15*time.Second),
@@ -62,6 +71,8 @@ func (e ElasticIngester) Sender() SenderFn {
 func (e ElasticIngester) Buffer(logs []slog.Record) bytes.Buffer {
 
 	var buf bytes.Buffer
+
+	buf.WriteString(`{"create":{}}` + "\n")
 
 	for _, record := range logs {
 

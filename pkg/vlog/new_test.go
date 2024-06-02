@@ -20,6 +20,7 @@ func TestNewElastic(t *testing.T) {
 }
 
 func WindmillVars() []slog.Attr {
+
 	return []slog.Attr{
 		slog.String("trace_id", "trace-id"),
 		slog.String("job_id", "job-id"),
