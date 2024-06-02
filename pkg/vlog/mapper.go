@@ -29,6 +29,7 @@ type JobMap interface {
 
 func WindmillAttr(traceID string, wm JobMap) []slog.Attr {
 	return []slog.Attr{
+		slog.String("_stream", "trace_id"),
 		slog.String("trace_id", traceID),
 		slog.String("wm_job_id", wm.GetRootFlowJobID()),
 		slog.String("wm_flow_path", wm.GetFlowPath()),
