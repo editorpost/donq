@@ -1,6 +1,9 @@
 package vlog
 
-import "log/slog"
+import (
+	"log/slog"
+	"strings"
+)
 
 // StdoutLogger sets the vlog as default slog logger
 func StdoutLogger(attrs ...slog.Attr) {
@@ -26,6 +29,10 @@ func New(attrs ...slog.Attr) *slog.Logger {
 
 // NewVictoriaLogs creates a new vlog with VictoriaMetrics sender.
 func NewVictoriaLogs(uri string, attrs ...slog.Attr) *slog.Logger {
+
+	uri, _ = strings.CutPrefix(uri, "/")
+	uri += "/insert/elasticsearch/"
+
 	return NewElastic(uri, attrs...)
 }
 
