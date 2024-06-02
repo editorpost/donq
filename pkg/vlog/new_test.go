@@ -8,13 +8,13 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	vlog.StdoutLogger(WindmillVars()...)
+	vlog.StdoutLogger(slog.LevelInfo, WindmillVars()...)
 	slog.Info("test message", slog.String("key", "value"))
 	time.Sleep(50 * time.Millisecond)
 }
 
 func TestNewElastic(t *testing.T) {
-	vlog.VictoriaLogger("", WindmillVars()...)
+	vlog.VictoriaLogger("", slog.LevelInfo, WindmillVars()...)
 	slog.Info("test message", slog.String("key", "value"))
 	time.Sleep(50 * time.Millisecond)
 }
