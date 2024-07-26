@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// WriteScriptResult to `./result.json` as adapter to windmill job result
 func WriteScriptResult(jsonData any, path string) error {
 	file, err := os.Create(path)
 	if err != nil {
