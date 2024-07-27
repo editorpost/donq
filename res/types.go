@@ -14,8 +14,8 @@ type (
 
 	S3Public struct {
 		S3
-		// BucketURL is the public URL of the bucket's root
-		BucketURL string `json:"bucketURL"`
+		// PublicURL points to root of the bucket
+		PublicURL string `json:"publicURL"`
 	}
 
 	Postgresql struct {
