@@ -12,6 +12,12 @@ type (
 		Port      int    `json:"port"`
 	}
 
+	S3Public struct {
+		S3
+		// BucketURL is the public URL of the bucket's root
+		BucketURL string `json:"bucketURL"`
+	}
+
 	Postgresql struct {
 		Host               string `json:"host"`
 		Port               int    `json:"port"`
