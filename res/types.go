@@ -1,5 +1,7 @@
 package res
 
+import "fmt"
+
 type (
 	S3 struct {
 		Bucket    string `json:"bucket"`
@@ -42,3 +44,9 @@ type (
 		OrganizationId string
 	}
 )
+
+// DSN return Postrgesql DSN from configuration
+func (p Postgresql) DSN() string {
+	return fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=%s",
+		p.User, p.Password, p.Host, p.Port, p.Dbname, p.SSLMode)
+}
