@@ -37,8 +37,6 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/deepmap/oapi-codegen v1.15.0 h1:SQqViaeb4k2vMul8gx12oDOIadEtoRqTdLkxjzqtQ90=
 github.com/deepmap/oapi-codegen v1.15.0/go.mod h1:a6KoHV7lMRwsPoEg2C6NDHiXYV3EQfiFocOlJ8dgJQE=
-github.com/editorpost/donq/pkg/script v0.0.0-20240603050357-1364a35222ea h1:tH4LGmPDMFrM7CDbl5KwdxUVxDhSZ6WKcVW8GPWyye0=
-github.com/editorpost/donq/pkg/script v0.0.0-20240603050357-1364a35222ea/go.mod h1:xVa25S99fgPnpBdG8WqZc9SEokcAA+S3oMpcm4KK7XE=
 github.com/editorpost/donq/pkg/valid v0.0.0-20240603050357-1364a35222ea h1:WOJ1QEgNECXGX8VtalzSXqn0uFas6cNZrparTKzgNPk=
 github.com/editorpost/donq/pkg/valid v0.0.0-20240603050357-1364a35222ea/go.mod h1:wJZrn7vyEXTcn1Fv6j9tCU4EhpTaclIX+DMZSQRUkpI=
 github.com/fatih/color v1.15.0 h1:kOqh6YHBtK8aywxGerMG2Eq3H6Qgoqeo13Bk2Mv/nBs=

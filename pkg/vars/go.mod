@@ -4,7 +4,6 @@ go 1.21
 
 require (
 	github.com/caarlos0/env/v10 v10.0.0
-	github.com/editorpost/donq/pkg/script v0.0.0-20240603050357-1364a35222ea
 	github.com/editorpost/donq/pkg/valid v0.0.0-20240603050357-1364a35222ea
 	github.com/stretchr/testify v1.8.4
 	github.com/windmill-labs/windmill-go-client v1.337.0
